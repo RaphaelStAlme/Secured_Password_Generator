@@ -2,7 +2,7 @@
 import random
 import string
 import hashlib
-from flask import Flask, request
+from flask import Flask, jsonify, request
 
 # Program in Python that generates secure passwords while offering a
 # customization to the user. The program will allow the user to specify
@@ -28,7 +28,7 @@ def generate_password():
 
     if hash:
         password = hash_password(password)
-    return password
+    return jsonify(password)
 
 def hash_password(password):
     return hashlib.sha256(password.encode('utf-8')).hexdigest()
