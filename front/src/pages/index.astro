@@ -1,9 +1,31 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PasswordService from "./password-service";
+
+
 const host = "127.0.0.1";
-const response = await fetch(`http://${host}:5000/generate_password`).then(
+var response = await fetch(`http://${host}:5000/generate_password`).then(
 	(response) => response.json(),
 );
+
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const digits = data.get("digits");
+	const symbols = data.get("symbols");
+	const passwordLength = data.get("passwordLength");
+    if (!digits && !symbols && !passwordLength) {
+      await PasswordService.generatePassword(digits, symbols, passwordLength);
+      return Astro.redirect("/");
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+
 ---
 
 <Layout title="Password generator">
@@ -20,15 +42,12 @@ const response = await fetch(`http://${host}:5000/generate_password`).then(
 					Password generator
 				</h2>
 
-				<form
-					class="mt-4 space-y-4 lg:mt-5 md:space-y-5"
-					action=""
-					method="get"
-				>
+				<form class="mt-4 space-y-4 lg:mt-5 md:space-y-5" method="post">
 					<div class="flex items-start">
 						<div class="flex items-center h-5">
 							<input
 								id="digits"
+								name="digits"
 								aria-describedby="digits"
 								type="checkbox"
 								class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
@@ -45,6 +64,7 @@ const response = await fetch(`http://${host}:5000/generate_password`).then(
 						<div class="flex items-center h-5">
 							<input
 								id="symbols"
+								name="symbols"
 								aria-describedby="symbols"
 								type="checkbox"
 								class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
@@ -60,20 +80,21 @@ const response = await fetch(`http://${host}:5000/generate_password`).then(
 						<div class="flex items-center h-5">
 							<input
 								id="passwordLength"
+								name="passwordLength"
 								aria-describedby="passwordLength"
 								type="text"
 								class="w-auto h-auto border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
 							/>
 						</div>
 					</div>
-					<button
+					<input
 						id="submitButton"
 						type="submit"
 						class="submitButton w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:ring-primary-800"
-						>Generate password</button
-					>
-					<div class="text-gray-500">{response.password}</div>
+						value="Generate password"
+					/>
 				</form>
+				<div class="text-gray-500">{response.password}</div>
 			</div>
 		</div>
 	</section>
@@ -89,20 +110,20 @@ const response = await fetch(`http://${host}:5000/generate_password`).then(
 	console.log(digits);
 	console.log("Hello world");
 
-	buttonSubmit.forEach((button) => {
-		button.addEventListener("click", async (e) => {
-			e.preventDefault();
+	// buttonSubmit.forEach((button) => {
+	// 	button.addEventListener("click", async (e) => {
+	// 		e.preventDefault();
 
-			const requestOptions: RequestInit = {
-				method: "GET",
-				mode: "no-cors",
-				headers: { "Content-Type": "application/json" },
-			};
+	// 		const requestOptions: RequestInit = {
+	// 			method: "GET",
+	// 			mode: "no-cors",
+	// 			headers: { "Content-Type": "application/json" },
+	// 		};
 
-			const requestResponse = await fetch(
-				"http://127.0.0.1:5000/generate_password",
-				requestOptions,
-			).then((response) => console.log(response));
-		});
-	});
+	// 		var response = await fetch(
+	// 			"http://127.0.0.1:5000/generate_password",
+	// 			requestOptions,
+	// 		);
+	// 	});
+	// });
 </script>
