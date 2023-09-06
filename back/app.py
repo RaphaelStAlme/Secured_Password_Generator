@@ -30,7 +30,7 @@ def generate_password():
 
     if hash:
         password = hash_password(password)
-    return '{ "password" : ' + '"' + password + '" }'
+    return jsonify({ "password" : password})
 
 def hash_password(password):
     return hashlib.sha256(password.encode('utf-8')).hexdigest()

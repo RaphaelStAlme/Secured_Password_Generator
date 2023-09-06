@@ -1,30 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import PasswordService from "./password-service";
-
 
 const host = "127.0.0.1";
 var response = await fetch(`http://${host}:5000/generate_password`).then(
 	(response) => response.json(),
 );
-
-
-if (Astro.request.method === "POST") {
-  try {
-    const data = await Astro.request.formData();
-    const digits = data.get("digits");
-	const symbols = data.get("symbols");
-	const passwordLength = data.get("passwordLength");
-    if (!digits && !symbols && !passwordLength) {
-      await PasswordService.generatePassword(digits, symbols, passwordLength);
-      return Astro.redirect("/");
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
-  }
-}
 
 ---
 
@@ -90,8 +70,7 @@ if (Astro.request.method === "POST") {
 					<button
 						id="submitButton"
 						class="submitButton w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:ring-primary-800"
-						value="Generate password"
-					/>
+						value="Generate password"></button>
 				</form>
 				<div class="text-gray-500">{response.password}</div>
 			</div>
@@ -99,25 +78,29 @@ if (Astro.request.method === "POST") {
 	</section>
 </Layout>
 
-<script>import PasswordService from "./password-service";
+<script>
+	import PasswordService from '../services/password-service'
 
-	const digits = document.getElementById("digits");
-	const symbols = document.getElementById("symbols");
-	const passwordLength = document.getElementById("passwordLength")
+	const digits = document.getElementById("digits") as HTMLInputElement;
+	const symbols = document.getElementById("symbols") as HTMLInputElement;;
+	const passwordLength = document.getElementById("passwordLength") as HTMLInputElement;
 
 	const buttonSubmit = document.querySelectorAll("button.submitButton");
-
-	console.log(digits);
-	console.log("Hello world");
 
 	buttonSubmit.forEach((button) => {
 		button.addEventListener("click", async (e) => {
 			e.preventDefault();
 
+			if (digits != null && symbols != null && passwordLength != null) {
+				var result = await PasswordService.generatePassword(
+					digits.checked,
+					symbols.checked,
+					passwordLength.value,
+					false,
+				);
+			}
 
-			var result =await PasswordService.generatePassword("false", "false", passwordLength.value || "8")
-
-			console.log(result)
+			console.log(result);
 		});
 	});
 </script>
