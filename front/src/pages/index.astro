@@ -2,9 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 
 const host = "127.0.0.1";
-var response = await fetch(`http://${host}:5000/generate_password`).then(
-	(response) => response.json(),
-);
 ---
 
 <Layout title="Password generator">
@@ -79,10 +76,10 @@ var response = await fetch(`http://${host}:5000/generate_password`).then(
 					</div>
 					<button
 						id="submitButton"
-						class="submitButton w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:ring-primary-800"
-						value="Generate password"></button>
+						class="submitButton w-full bg-gray-300 dark:text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:ring-primary-800"
+						>Generate password</button>
 				</form>
-				<div class="text-gray-500">{response.password}</div>
+				<div id="generatedPassword" class="text-gray-500"></div>
 			</div>
 		</div>
 	</section>
@@ -97,6 +94,7 @@ var response = await fetch(`http://${host}:5000/generate_password`).then(
 		"passwordLength",
 	) as HTMLInputElement;
 	const hash = document.getElementById("hash") as HTMLInputElement;
+	const generatedPassword	= document.getElementById("generatedPassword") as HTMLInputElement;
 
 	const buttonSubmit = document.querySelectorAll("button.submitButton");
 
@@ -113,6 +111,7 @@ var response = await fetch(`http://${host}:5000/generate_password`).then(
 				);
 
 				console.log(result);
+				generatedPassword.innerText = result.password;
 			}
 		});
 	});
