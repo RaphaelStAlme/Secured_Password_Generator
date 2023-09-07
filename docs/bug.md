@@ -47,6 +47,20 @@ from flask_cors import CORS
 CORS(app)
 ```
 
+In javascript project, we have removed `mode: "no-cors"`:
+    
+```javascript
+async updateTutorial() {
+    const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    } 
+    
+    await fetch(`http://127.0.0.1:5000/generate_password?digits=${digits}&symbols=${symbols}&length=${length}&hash=${hash}`, requestOptions);
+}
+```
+
+
 And the issue is fixed.
 
 ## 2. Bug: `SyntaxError: JSON.parse: unexpected character at line 1 column 20 of the JSON data`
@@ -96,6 +110,41 @@ jsonify({ "password" : password})
 ```
 
 And the issue is fixed.
+
+## 3. Bug: `TypeError: NetworkError when attempting to fetch resource.` with password length which contains character.
+
+We try to call API with this function after to give instruction in order to generate password:
+
+```javascript
+static async generatePassword(digits: boolean, symbols: boolean, length: string | null, hash: boolean) {
+        console.log(length);
+        var response = await fetch(`http://127.0.0.1:5000/generate_password?digits=${digits}&symbols=${symbols}&length=${length}&hash=${hash}`);
+        return response.json();
+    }
+```
+
+And this error is raised if you give a password length which contains character like `A`:
+
+```bash
+TypeError: NetworkError when attempting to fetch resource.
+```
+
+### Reason
+
+The reason is that we try to call API with a password length which contains character like `A`. And javascript code doesn't verify correctly if password length contains only number.
+
+### Solution
+
+We have added a verification in javascript code to check if password length contains only number:
+
+```javascript
+if (passwordLength.value.length != 0 && !/^[a-zA-Z]+$/.test(passwordLength.value)) {
+	alert("Password length must be a number");
+}
+```
+
+And the issue is fixed.
+
 
 
 

@@ -77,7 +77,8 @@ const host = "127.0.0.1";
 					<button
 						id="submitButton"
 						class="submitButton w-full bg-gray-300 dark:text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:ring-primary-800"
-						>Generate password</button>
+						>Generate password</button
+					>
 				</form>
 				<div id="generatedPassword" class="text-gray-500"></div>
 			</div>
@@ -94,7 +95,9 @@ const host = "127.0.0.1";
 		"passwordLength",
 	) as HTMLInputElement;
 	const hash = document.getElementById("hash") as HTMLInputElement;
-	const generatedPassword	= document.getElementById("generatedPassword") as HTMLInputElement;
+	const generatedPassword = document.getElementById(
+		"generatedPassword",
+	) as HTMLInputElement;
 
 	const buttonSubmit = document.querySelectorAll("button.submitButton");
 
@@ -103,15 +106,17 @@ const host = "127.0.0.1";
 			e.preventDefault();
 
 			if (digits != null && symbols != null && passwordLength != null) {
-				var result = await PasswordService.generatePassword(
-					digits.checked,
-					symbols.checked,
-					passwordLength.value,
-					hash.checked,
-				);
-
-				console.log(result);
-				generatedPassword.innerText = result.password;
+				if (passwordLength.value.length != 0 && !/^[a-zA-Z]+$/.test(passwordLength.value)) {
+					alert("Password length must be a number");
+				} else {
+					var result = await PasswordService.generatePassword(
+						digits.checked,
+						symbols.checked,
+						passwordLength.value,
+						hash.checked,
+					);
+					generatedPassword.innerText = result.password;
+				}
 			}
 		});
 	});
