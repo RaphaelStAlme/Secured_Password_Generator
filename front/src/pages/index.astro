@@ -80,6 +80,7 @@ const host = "127.0.0.1";
 						>Generate password</button
 					>
 				</form>
+				<div id="strengthBadge"></div>
 				<div id="generatedPassword" class="text-gray-500"></div>
 			</div>
 		</div>
@@ -88,6 +89,7 @@ const host = "127.0.0.1";
 
 <script>
 	import PasswordService from "../services/password-service";
+	import {checkPasswordStrength} from "../services/password-checker";
 
 	const digits = document.getElementById("digits") as HTMLInputElement;
 	const symbols = document.getElementById("symbols") as HTMLInputElement;
@@ -106,7 +108,10 @@ const host = "127.0.0.1";
 			e.preventDefault();
 
 			if (digits != null && symbols != null && passwordLength != null) {
-				if (passwordLength.value.length != 0 && !/^[a-zA-Z]+$/.test(passwordLength.value)) {
+				if (
+					passwordLength.value.length != 0 &&
+					/[a-zA-Z]+/.test(passwordLength.value)
+				) {
 					alert("Password length must be a number");
 				} else {
 					var result = await PasswordService.generatePassword(
@@ -115,7 +120,12 @@ const host = "127.0.0.1";
 						passwordLength.value,
 						hash.checked,
 					);
+
+					navigator.clipboard.writeText(result.password);
 					generatedPassword.innerText = result.password;
+
+					var strength = checkPasswordStrength(result.password);
+					console.log(strength)
 				}
 			}
 		});
