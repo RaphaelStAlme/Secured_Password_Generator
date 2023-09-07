@@ -1,0 +1,118 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const host = "127.0.0.1";
+---
+
+<Layout title="Password generator">
+	<section class="bg-gray-50 dark:bg-gray-900">
+		<div
+			class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+		>
+			<div
+				class="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8"
+			>
+				<h2
+					class="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+				>
+					Password generator
+				</h2>
+
+				<form class="mt-4 space-y-4 lg:mt-5 md:space-y-5" method="get">
+					<div class="flex items-start">
+						<div class="flex items-center h-5">
+							<input
+								id="digits"
+								name="digits"
+								aria-describedby="digits"
+								type="checkbox"
+								class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+							/>
+							<label
+								for="digits"
+								class="ml-3 text-sm font-light text-gray-500 dark:text-gray-300"
+								>Digits</label
+							>
+						</div>
+						<div class="flex items-center h-5">
+							<input
+								id="symbols"
+								name="symbols"
+								aria-describedby="symbols"
+								type="checkbox"
+								class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+							/>
+							<label
+								for="symbols"
+								class="ml-3 text-sm font-light text-gray-500 dark:text-gray-300"
+								>Symbols</label
+							>
+						</div>
+						<div class="flex items-center h-5">
+							<input
+								id="passwordLength"
+								name="passwordLength"
+								aria-describedby="passwordLength"
+								type="text"
+								class="w-auto h-auto border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+							/>
+						</div>
+					</div>
+					<div class="flex items-start">
+						<div class="flex items-center h-5">
+							<input
+								id="hash"
+								name="hash"
+								aria-describedby="hash"
+								type="checkbox"
+								class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+							/>
+							<label
+								for="hash"
+								class="ml-3 font-light text-gray-500 dark:text-gray-300"
+								>Hash</label
+							>
+						</div>
+					</div>
+					<button
+						id="submitButton"
+						class="submitButton w-full bg-gray-300 dark:text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-700 dark:hover:bg-teal-800 dark:focus:ring-primary-800"
+						>Generate password</button>
+				</form>
+				<div id="generatedPassword" class="text-gray-500"></div>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<script>
+	import PasswordService from "../services/password-service";
+
+	const digits = document.getElementById("digits") as HTMLInputElement;
+	const symbols = document.getElementById("symbols") as HTMLInputElement;
+	const passwordLength = document.getElementById(
+		"passwordLength",
+	) as HTMLInputElement;
+	const hash = document.getElementById("hash") as HTMLInputElement;
+	const generatedPassword	= document.getElementById("generatedPassword") as HTMLInputElement;
+
+	const buttonSubmit = document.querySelectorAll("button.submitButton");
+
+	buttonSubmit.forEach((button) => {
+		button.addEventListener("click", async (e) => {
+			e.preventDefault();
+
+			if (digits != null && symbols != null && passwordLength != null) {
+				var result = await PasswordService.generatePassword(
+					digits.checked,
+					symbols.checked,
+					passwordLength.value,
+					hash.checked,
+				);
+
+				console.log(result);
+				generatedPassword.innerText = result.password;
+			}
+		});
+	});
+</script>
