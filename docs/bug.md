@@ -145,9 +145,19 @@ if (passwordLength.value.length != 0 && /[a-zA-Z]+/.test(passwordLength.value)) 
 
 And the issue is fixed.
 
+## 4. Bug: `Localhost cannot be reached` with Safari.
 
+When trying to call the front page of our application
 
+```javascript
+driver.get("http://localhost:4321")
+```
 
+And this this error is raised:
+
+```bash
+TypeError: Safari cannot reached localhost
+```
 
 
 
