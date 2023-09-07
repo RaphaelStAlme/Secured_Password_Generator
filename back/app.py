@@ -21,7 +21,7 @@ def generate_password():
     symbols = args.get('symbols', 'true').lower() == 'true'
     hash = args.get('hash', 'false').lower() == 'true'
 
-    chars = string.ascii_uppercase
+    chars = string.ascii_uppercase + string.ascii_lowercase
     if digits:
         chars += string.digits
     if symbols:
