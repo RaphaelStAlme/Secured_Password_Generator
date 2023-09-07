@@ -138,7 +138,7 @@ The reason is that we try to call API with a password length which contains char
 We have added a verification in javascript code to check if password length contains only number:
 
 ```javascript
-if (passwordLength.value.length != 0 && !/^[a-zA-Z]+$/.test(passwordLength.value)) {
+if (passwordLength.value.length != 0 && /[a-zA-Z]+/.test(passwordLength.value)) {
 	alert("Password length must be a number");
 }
 ```

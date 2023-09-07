@@ -106,7 +106,10 @@ const host = "127.0.0.1";
 			e.preventDefault();
 
 			if (digits != null && symbols != null && passwordLength != null) {
-				if (passwordLength.value.length != 0 && !/^[a-zA-Z]+$/.test(passwordLength.value)) {
+				if (
+					passwordLength.value.length != 0 &&
+					/[a-zA-Z]+/.test(passwordLength.value)
+				) {
 					alert("Password length must be a number");
 				} else {
 					var result = await PasswordService.generatePassword(
@@ -115,6 +118,8 @@ const host = "127.0.0.1";
 						passwordLength.value,
 						hash.checked,
 					);
+
+					navigator.clipboard.writeText(result.password);
 					generatedPassword.innerText = result.password;
 				}
 			}
