@@ -3,7 +3,6 @@ import random
 import string
 import hashlib
 from flask import Flask, jsonify, request
-from flask_cors import CORS
 
 # Program in Python that generates secure passwords while offering a
 # customization to the user. The program will allow the user to specify
@@ -11,7 +10,6 @@ from flask_cors import CORS
 # symbols. In addition, optionally, you can integrate a
 # hashing feature using an encryption algorithm of your choice.
 app = Flask(__name__)
-CORS(app)
 
 @app.route('/generate_password', methods=['GET'])
 def generate_password():
@@ -30,7 +28,7 @@ def generate_password():
 
     if hash:
         password = hash_password(password)
-    return jsonify({ "password" : password})
+    return jsonify(password)
 
 def hash_password(password):
     return hashlib.sha256(password.encode('utf-8')).hexdigest()
