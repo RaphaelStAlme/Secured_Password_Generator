@@ -14,9 +14,8 @@ Program in Python that generates secure passwords. The program will allow the us
 ## Prerequisites
 - Python 3
 
-- Flask
-```shell
-pip3 install Flask
+```bash
+pip install requirements.txt
 ```
 
 ## Launch
