@@ -35,7 +35,7 @@ export function checkPasswordStrength(password: string) {
                 strengthBadge.style.backgroundColor = "lightgreen"
                 strengthBadge.textContent = 'Strong'
                 break;
-            case 4:
+            case 4: case 5:
                 strengthBadge.style.backgroundColor = "green"
                 strengthBadge.textContent = 'Very Strong'
                 break;
