@@ -33,3 +33,15 @@
 |-----------------------|--------|------------------------------|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------|------------------------------|------------|
 | 7    | Password with digits | Password should contains digits | Digits checkbox tick + click on Generated password button | Method generated password executed + password showing in the bottom of the page | Password should been hash    | :x:         |
 | 8 | Password without digits | Password shouldn't contains digits | Click on Generated password button | Method generated password executed + password showing in the bottom of the page | Password shouldn't been hash | :x: |
+
+### Lowercase and uppercase
+
+| **ID**         | **Test name** | **Objective**                | **User action expected**                                | **System action expected**                                                                             | **Criteria sucess**          | **Status** |
+|-----------------------|--------|------------------------------|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------|------------------------------|------------|
+| 9    | Password with lowercase and uppercase | Password should contains lowercase and uppercase | Add length for the password + click on Generated password button | Method generated password executed + password showing in the bottom of the page | Password should contains lowercase and uppercase   | :x:         |
+
+### Clipboard
+
+| **ID**         | **Test name** | **Objective**                | **User action expected**                                | **System action expected**                                                                             | **Criteria sucess**          | **Status** |
+|-----------------------|--------|------------------------------|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------|------------------------------|------------|
+| 10    | Password copied to clipboard | Password should be copied to clipboard | Click on options + add Length + Click on Generated password button | Method generated password executed + password showing in the bottom of the page + password copied to clipboard | Password should be copied to clipboard   | :x:         |
