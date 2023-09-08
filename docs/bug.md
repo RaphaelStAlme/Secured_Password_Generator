@@ -159,6 +159,17 @@ And this this error is raised:
 TypeError: Safari cannot reached localhost
 ```
 
+## 5. Bug: Default length password doesn't display in front
+
+When we tried to generate a password whithout a length the password don't show up
+
+### Reason
+The input where the length is define was not set at all.
+
+### Solution
+
+This was fixed by changing the type of the input by "number" instead of "text" and set the value to 8 by default.
+
 
 
 
