@@ -30,3 +30,7 @@ flask run
 ```
 pnpm run dev
 ```
+
+## Scenario tests cases
+
+[Link to the document](docs/tests.md)
