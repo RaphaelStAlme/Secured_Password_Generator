@@ -1,59 +1,77 @@
-import unittest
-import random
 import string
-import hashlib
-import json
+import unittest
+from app import app
 
-def generate_password(length, digits, symbols, hash):
-    chars = string.ascii_uppercase
-    if digits:
-        chars += string.digits
-    if symbols:
-        chars += string.punctuation
-    password = ''.join(random.choice(chars) for _ in range(length))
-
-    if hash:
-        password = hash_password(password)
-    return json.dumps(password)
-
-def hash_password(password):
-    return hashlib.sha256(password.encode('utf-8')).hexdigest()
-
-def length_password(password):
-    return len(password) -2
-
+# Define a test class for the Flask application.
 class TestApp(unittest.TestCase):
-    def test_generate_password(self):
-        password = generate_password(8, True, True, True)
-        self.assertEqual(length_password(password), 64)
 
-    def test_generate_password_without_digits(self):
-        password = generate_password(8, False, True, True)
-        self.assertEqual(length_password(password), 64)
+    # Set up the test environment.
+    def setUp(self):
+        app.config['TESTING'] = True
+        self.app = app.test_client()
 
+    # Step 0 : Test generating a hashed password (SHA-256).
+    def test_generate_password_hashed(self):
+        response = self.app.get('/generate_password?hash=true')
+        data = response.get_json()
+        password = data['password']
+        self.assertEqual(len(password), 64)  # SHA-256 hashed password
+
+    # Step 1 : Test generating a non-hashed password.
+    def test_generate_password_not_hashed(self):
+        response = self.app.get('/generate_password?hash=false')
+        data = response.get_json()
+        password = data['password']
+        self.assertEqual(len(password), 8)
+
+    # Step 2 : Test generating a password with the default length (8 characters).
+    def test_generate_password_default_length(self):
+        response = self.app.get('/generate_password')
+        data = response.get_json()
+        password = data['password']
+        self.assertEqual(len(password), 8)
+
+    # Step 3 : Test generating a password with a custom length (12 characters).
+    def test_generate_password_custom_length(self):
+        response = self.app.get('/generate_password?length=12')
+        data = response.get_json()
+        password = data['password']
+        self.assertEqual(len(password), 12)
+    
+    # Step 4 : Test generating a password with a null length (0 characters).
+    def test_generate_password_null_length(self):
+        response = self.app.get('/generate_password?length=0')
+        data = response.get_json()
+        password = data['password']
+        self.assertEqual(len(password), 0)
+
+    # Step 5 : Test generating a password with symbols included.
+    def test_generate_password_with_symbols(self):
+        response = self.app.get('/generate_password?symbols=true')
+        data = response.get_json()
+        password = data['password']
+        self.assertTrue(any(c in string.punctuation for c in password))
+
+    # Step 6 : Test generating a password without symbols.
     def test_generate_password_without_symbols(self):
-        password = generate_password(8, True, False, True)
-        self.assertEqual(length_password(password), 64)
+        response = self.app.get('/generate_password?symbols=false')
+        data = response.get_json()
+        password = data['password']
+        self.assertTrue(all(c.isalpha() or c.isdigit() for c in password))
 
-    def test_generate_password_without_hash(self):
-        password = generate_password(8, True, True, False)
-        self.assertEqual(length_password(password), 8)
+    # Step 7 : Test generating a password with digits included.
+    def test_generate_password_with_digits(self):
+        response = self.app.get('/generate_password?digits=true')
+        data = response.get_json()
+        password = data['password']
+        self.assertTrue(any(c.isdigit() for c in password))
 
-    def test_generate_password_without_hash_and_length_of_0(self):
-        password = generate_password(0, True, True, False)
-        self.assertEqual(length_password(password), 0)
-
-    def test_generate_password_without_hash_and_length_of_1(self):
-        password = generate_password(1, True, True, False)
-        self.assertEqual(length_password(password), 1)
-
-    def test_generate_password_without_hash_and_length_negative(self):
-        password = generate_password(-1, True, True, False)
-        self.assertEqual(length_password(password), 0)
-
-    def test_hash_password(self):
-        password = hash_password('test')
-        self.assertEqual(length_password(password), 62)
+    # Step 8 : Test generating a password without digits.
+    def test_generate_password_without_digits(self):
+        response = self.app.get('/generate_password?digits=false')
+        data = response.get_json()
+        password = data['password']
+        self.assertTrue(all(c.isalpha() or c in string.punctuation for c in password))  
 
 if __name__ == '__main__':
     unittest.main()
