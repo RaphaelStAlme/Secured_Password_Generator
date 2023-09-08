@@ -13,7 +13,7 @@ export function checkPasswordStrength(password: string) {
     if (/[0-9]+/.test(password)) {
         strengthPassword += 1
     }
-    if (/[$@#&!]+/.test(password)) {
+    if (/[^A-Za-z0-9]+/.test(password)) {
         strengthPassword += 1
     }
     if (password.length > 10) {
